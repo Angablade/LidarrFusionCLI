@@ -11,6 +11,7 @@ class Program
         bool autoDownload = false;
         bool verbose = false;
         bool tagger = true;
+        bool skipcheck = false;
         string generateList = null;
         string rootpath = null;
         string ytqappend = null;
@@ -99,6 +100,11 @@ class Program
                     }
                     break;
 
+                case "-skipcheck":
+                case "-spc":
+                    skipcheck = true;
+                    break;
+
                 case "-h":
                     Console.WriteLine("Usage: <app> [options]");
                     Console.WriteLine("-lidarrapiurl or -lau: Set Lidarr API URL (required)");
@@ -127,10 +133,11 @@ class Program
             }
         }
 
-        Console.WriteLine($"lidarrApiUrl: {lidarrApiUrl}");
-        Console.WriteLine($"lidarrApiKey: {lidarrApiKey}");
+
         if (verbose)
         {
+            Console.WriteLine($"lidarrApiUrl: {lidarrApiUrl}");
+            Console.WriteLine($"lidarrApiKey: {lidarrApiKey}");
             Console.WriteLine($"autoDownload: {autoDownload}");
             Console.WriteLine($"verbose: {verbose}");
             Console.WriteLine($"generateList: {generateList}");
@@ -139,19 +146,19 @@ class Program
             Console.WriteLine($"Search Mode: {searchMode}");
         }
 
+        if (skipcheck) {
+            goto ContinueProcess;
+        };
+
         int retryCounter = 0;
     RetryCheck:
-
         if (retryCounter >= 10)
         {
             Console.WriteLine(Funcs.GetRandomInsult());
             Environment.Exit(0);
         }
-
         Console.WriteLine("Do your settings look correct? (y/n)");
-
         ConsoleKeyInfo key = Console.ReadKey();
-
         if (key.Key == ConsoleKey.Y)
         {
             Console.WriteLine("\nUser agreed. Continuing with the process...");
