@@ -96,6 +96,52 @@ class Funcs
             }
         }
     }
+    public static string SearchYoutubeMusic(string query)
+    {
+        string queryEncoded = WebUtility.UrlEncode(query);
+        string url = "https://music.youtube.com/search?q=" + queryEncoded;
+        using (var client = new WebClient())
+        {
+            try
+            {
+                // Set the user-agent to simulate a browser request
+                client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:117.0) Gecko/20100101 Firefox/117.0");
+
+                // Fetch the search results page
+                string response = client.DownloadString(url)
+                                        .Replace("\\x22", "\"")
+                                        .Replace("\\x7b", "{")
+                                        .Replace("\\x7d", "}")
+                                        .Replace("\\x5b", "[")
+                                        .Replace("\\x5d", "]");
+                if (!string.IsNullOrEmpty(response))
+                {
+                    // Match the first video/track ID in the search results
+                    var matches = Regex.Match(response, "\"videoId\"\\s*:\\s*\"([^\"]+)\"");
+                    if (matches.Success)
+                    {
+                        string videoId = matches.Groups[1].Value;
+                        string videoUrl = "https://music.youtube.com/watch?v=" + videoId;
+                        System.Diagnostics.Debug.WriteLine("Music link found: " + videoUrl);
+                        return videoUrl;
+                    }
+                    else
+                    {
+                        return "Music link not found in the search results.";
+                    }
+                }
+                else
+                {
+                    return "Error fetching YouTube Music search results.";
+                }
+            }
+            catch (WebException ex)
+            {
+                return "Error fetching YouTube Music search results: " + ex.Message;
+            }
+        }
+    }
+
     public static string GetRandomInsult()
     {
         List<string> insults = new List<string>
@@ -153,7 +199,6 @@ class Funcs
         }
         return null;
     }
-
     public static string[] GetTrackList(string artist, string album)
     {
         string apiUrl = "https://musicbrainz.org/ws/2/";

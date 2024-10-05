@@ -2,7 +2,7 @@
   "profiles": {
     "LidarrFusionCLI": {
       "commandName": "Project",
-      "commandLineArgs": "-lau \"http://192.168.1.156:8686\" -lak \"961f2c00612c46b49030c0e80d83c467\" -adl -ytd \"yt-dlp_min.exe\" -ytq \" official\""
+      "commandLineArgs": "-lau \"http://192.168.1.156:8686\" -lak \"961f2c00612c46b49030c0e80d83c467\" -adl -ytd \"yt-dlp.exe\" -ytq \" lyrics\" -sm \"youtubemusic\""
     }
   }
 }
